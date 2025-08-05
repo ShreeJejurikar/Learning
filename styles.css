@@ -1,0 +1,475 @@
+:root {
+  --building-color1: #aa80ff;
+  --building-color2: #66cc99;
+  --building-color3: #cc6699;
+  --building-color4: #538cc6;
+  --window-color1: #bb99ff;
+  --window-color2: #8cd9b3;
+  --window-color3: #d98cb3;
+  --window-color4: #8cb3d9;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  height: 100vh;
+  margin: 0;
+  overflow: hidden;
+}
+
+.background-buildings,
+.foreground-buildings {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-evenly;
+  position: absolute;
+  top: 0;
+  bottom: 30px; /* Move buildings up */
+}
+
+.building-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.window-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+}
+
+.sky {
+  background: radial-gradient(
+    closest-corner circle at 15% 15%,
+    #ffcf33,
+    #ffcf33 20%,
+    #ffff66 21%,
+    #bbeeff 100%
+  );
+}
+
+/* BACKGROUND BUILDINGS - "bb" stands for "background building" */
+.bb1 {
+  filter: blur(1px);
+  width: 10%;
+  height: 70%;
+}
+
+.bb1a {
+  width: 70%;
+}
+
+.bb1b {
+  width: 80%;
+}
+
+.bb1c {
+  width: 90%;
+}
+
+.bb1d {
+  width: 100%;
+  height: 70%;
+  background: linear-gradient(var(--building-color1) 50%, var(--window-color1));
+  box-shadow: 0 0 10px 2px var(--building-color1);
+}
+
+.bb1-window {
+  height: 10%;
+  background: linear-gradient(var(--building-color1), var(--window-color1));
+  box-shadow: 0 0 6px 1px var(--window-color1);
+  transition: box-shadow 0.3s ease-in-out;
+}
+
+.bb2 {
+  width: 10%;
+  height: 50%;
+  filter: blur(1px);
+}
+
+.bb2a {
+  border-bottom: 5vh solid var(--building-color2);
+  border-left: 5vw solid transparent;
+  border-right: 5vw solid transparent;
+  filter: drop-shadow(0 0 6px var(--building-color2));
+}
+
+.bb2b {
+  width: 100%;
+  height: 100%;
+  background: repeating-linear-gradient(
+    var(--building-color2),
+    var(--building-color2) 6%,
+    var(--window-color2) 6%,
+    var(--window-color2) 9%
+  );
+
+  box-shadow: 0 0 10px 2px var(--window-color2);
+  transition: box-shadow 0.3s ease-in-out;
+}
+
+.bb3 {
+  width: 10%;
+  height: 55%;
+  background: repeating-linear-gradient(
+    90deg,
+    var(--building-color3),
+    var(--building-color3),
+    var(--window-color3) 15%
+  );
+  box-shadow: 0 0 8px 2px var(--window-color3);
+  filter: blur(1px);
+}
+
+.bb4 {
+  width: 11%;
+  height: 58%;
+  filter: blur(1px);
+}
+
+.bb4a {
+  width: 3%;
+  height: 10%;
+  background-color: var(--building-color4);
+  box-shadow: 0 0 4px 1px var(--building-color4);
+}
+
+.bb4b {
+  width: 80%;
+  height: 5%;
+  background-color: var(--building-color4);
+  box-shadow: 0 0 4px 1px var(--building-color4);
+}
+
+.bb4c {
+  width: 100%;
+  height: 85%;
+  background-color: var(--building-color4);
+  box-shadow: 0 0 10px 2px var(--building-color4);
+}
+
+.bb4-window {
+  width: 18%;
+  height: 90%;
+  background-color: var(--window-color4);
+  box-shadow: 0 0 6px 1px var(--window-color4);
+}
+
+/* FOREGROUND BUILDINGS - "fb" stands for "foreground building" */
+.fb1 {
+  width: 10%;
+  height: 60%;
+}
+
+/* Roof (CSS triangle) */
+.fb1a {
+  border-bottom: 7vh solid var(--building-color4);
+  border-left: 2vw solid transparent;
+  border-right: 2vw solid transparent;
+
+  filter: drop-shadow(0 0 6px var(--building-color4));
+  transition: filter 0.3s ease-in-out;
+}
+
+/* Antenna / top section */
+.fb1b {
+  width: 60%;
+  height: 10%;
+  background-color: var(--building-color4);
+
+  box-shadow: 0 0 8px 2px var(--building-color4);
+  transition: box-shadow 0.3s ease-in-out;
+}
+
+/* Main building body with vertical window stripes */
+.fb1c {
+  width: 100%;
+  height: 80%;
+  background: repeating-linear-gradient(
+      90deg,
+      var(--building-color4),
+      var(--building-color4) 10%,
+      transparent 10%,
+      transparent 15%
+    ),
+    repeating-linear-gradient(
+      var(--building-color4),
+      var(--building-color4) 10%,
+      var(--window-color4) 10%,
+      var(--window-color4) 90%
+    );
+
+  box-shadow: 0 0 10px 2px var(--window-color4);
+  transition: box-shadow 0.3s ease-in-out;
+}
+
+.fb1:hover .fb1a {
+  filter: drop-shadow(0 0 10px var(--window-color4));
+}
+
+.fb1:hover .fb1b,
+.fb1:hover .fb1c {
+  box-shadow: 0 0 14px 3px var(--window-color4);
+}
+
+.fb2 {
+  width: 10%;
+  height: 40%;
+}
+
+.fb2a {
+  width: 100%;
+  border-bottom: 10vh solid var(--building-color3);
+  border-left: 1vw solid transparent;
+  border-right: 1vw solid transparent;
+
+  filter: drop-shadow(0 0 6px var(--building-color3));
+  transition: filter 0.3s ease-in-out;
+}
+
+.fb2b {
+  width: 100%;
+  height: 75%;
+  background-color: var(--building-color3);
+
+  box-shadow: 0 0 8px 2px var(--building-color3);
+  transition: box-shadow 0.3s ease-in-out;
+}
+
+.fb2-window {
+  width: 22%;
+  height: 100%;
+  background-color: var(--window-color3);
+
+  box-shadow: 0 0 6px 1px var(--window-color3);
+}
+
+.fb2:hover .fb2a {
+  filter: drop-shadow(0 0 10px var(--window-color3));
+}
+
+.fb2:hover .fb2b {
+  box-shadow: 0 0 14px 3px var(--window-color3);
+}
+
+.fb3 {
+  width: 10%;
+  height: 35%;
+}
+
+.fb3a {
+  width: 80%;
+  height: 15%;
+  background-color: var(--building-color1);
+
+  box-shadow: 0 0 6px 1px var(--building-color1);
+  transition: box-shadow 0.3s ease-in-out;
+}
+
+.fb3b {
+  width: 100%;
+  height: 35%;
+  background-color: var(--building-color1);
+
+  box-shadow: 0 0 8px 2px var(--building-color1);
+  transition: box-shadow 0.3s ease-in-out;
+}
+
+.fb3-window {
+  width: 25%;
+  height: 80%;
+  background-color: var(--window-color1);
+
+  box-shadow: 0 0 6px 1px var(--window-color1);
+}
+
+.fb3:hover .fb3a,
+.fb3:hover .fb3b {
+  box-shadow: 0 0 14px 3px var(--window-color1);
+}
+
+.fb4 {
+  width: 8%;
+  height: 45%;
+  position: relative;
+  left: 10%;
+}
+
+.fb4a {
+  border-top: 5vh solid transparent;
+  border-left: 8vw solid var(--building-color1);
+
+  filter: drop-shadow(0 0 6px var(--building-color1));
+  transition: filter 0.3s ease-in-out;
+}
+
+.fb4b {
+  width: 100%;
+  height: 89%;
+  background-color: var(--building-color1);
+  display: flex;
+  flex-wrap: wrap;
+
+  box-shadow: 0 0 10px 2px var(--building-color1);
+  transition: box-shadow 0.3s ease-in-out;
+}
+
+.fb4-window {
+  width: 30%;
+  height: 10%;
+  border-radius: 50%;
+  background-color: var(--window-color1);
+  margin: 10%;
+
+  box-shadow: 0 0 4px 1px var(--window-color1);
+}
+
+.fb4:hover .fb4a {
+  filter: drop-shadow(0 0 10px var(--window-color1));
+}
+
+.fb4:hover .fb4b {
+  box-shadow: 0 0 14px 3px var(--window-color1);
+}
+
+.fb5 {
+  width: 10%;
+  height: 33%;
+  position: relative;
+  right: 10%;
+  background: repeating-linear-gradient(
+      var(--building-color2),
+      var(--building-color2) 5%,
+      transparent 5%,
+      transparent 10%
+    ),
+    repeating-linear-gradient(
+      90deg,
+      var(--building-color2),
+      var(--building-color2) 12%,
+      var(--window-color2) 12%,
+      var(--window-color2) 44%
+    );
+  filter: blur(1px);
+  box-shadow: 0 0 10px 2px var(--window-color2);
+  transition: box-shadow 0.3s ease-in-out;
+}
+
+.fb5:hover {
+  box-shadow: 0 0 14px 3px var(--window-color2);
+}
+
+.fb6 {
+  width: 9%;
+  height: 38%;
+  background: repeating-linear-gradient(
+      90deg,
+      var(--building-color3),
+      var(--building-color3) 10%,
+      transparent 10%,
+      transparent 30%
+    ),
+    repeating-linear-gradient(
+      var(--building-color3),
+      var(--building-color3) 10%,
+      var(--window-color3) 10%,
+      var(--window-color3) 30%
+    );
+
+  box-shadow: 0 0 8px 2px var(--window-color3);
+  transition: box-shadow 0.3s ease-in-out;
+}
+
+.fb6:hover {
+  box-shadow: 0 0 14px 3px var(--window-color3);
+}
+
+@media (max-width: 1000px) {
+  :root {
+    --building-color1: #000;
+    --building-color2: #000;
+    --building-color3: #000;
+    --building-color4: #000;
+    --window-color1: #777;
+    --window-color2: #777;
+    --window-color3: #777;
+    --window-color4: #777;
+  }
+
+  .fb1:hover .fb1a {
+    filter: drop-shadow(0 0 10px var(--window-color4));
+  }
+
+  .fb1:hover .fb1b,
+  .fb1:hover .fb1c {
+    box-shadow: 0 0 14px 3px var(--window-color4);
+  }
+
+  .fb2:hover .fb2a {
+    filter: drop-shadow(0 0 10px var(--window-color3));
+  }
+
+  .fb2:hover .fb2b {
+    box-shadow: 0 0 14px 3px var(--window-color3);
+  }
+
+  .fb3:hover .fb3a,
+  .fb3:hover .fb3b {
+    box-shadow: 0 0 14px 3px var(--window-color1);
+  }
+
+  .fb4:hover .fb4a {
+    filter: drop-shadow(0 0 10px var(--window-color1));
+  }
+
+  .fb4:hover .fb4b {
+    box-shadow: 0 0 14px 3px var(--window-color1);
+  }
+
+  .fb5:hover {
+    box-shadow: 0 0 14px 3px var(--window-color2);
+  }
+
+  .fb6:hover {
+    box-shadow: 0 0 14px 3px var(--window-color3);
+  }
+}
+
+.music-control {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    width: 60px;
+    height: 60px;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+    z-index: 1000;
+    border: 3px solid #4CAF50;
+}
+
+.music-control:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+}
+
+.music-control img {
+    width: 30px;
+    height: 30px;
+    transition: all 0.3s ease;
+}
+
+.music-control.playing {
+    border-color: #f44336;
+    background: rgba(255, 255, 255, 0.95);
+} 
