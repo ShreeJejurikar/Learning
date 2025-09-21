@@ -96,7 +96,13 @@ def init_pipeline():
     global pipeline, temp_upload_dir
     try:
         pipeline = LegalRAGPipeline()
+        # Create temp directory with better error handling
         temp_upload_dir = tempfile.mkdtemp(prefix="legal_rag_")
+        
+        # Ensure directory exists and has proper permissions
+        if not os.path.exists(temp_upload_dir):
+            os.makedirs(temp_upload_dir, exist_ok=True)
+        
         logger.info(f"Pipeline initialized successfully. Temp dir: {temp_upload_dir}")
         return True
     except Exception as e:
@@ -170,6 +176,27 @@ def get_status():
         return handle_error(f"Error getting status: {str(e)}")
 
 # ============================================================================
+# TESTING ENDPOINTS
+# ============================================================================
+
+@app.route('/test_paths', methods=['POST'])
+def test_file_paths():
+    """Test endpoint to debug file path issues"""
+    try:
+        data = request.get_json()
+        
+        return jsonify({
+            "success": True,
+            "received_data": data,
+            "file_paths": data.get('file_paths') if data else None,
+            "file_paths_type": str(type(data.get('file_paths'))) if data else None,
+            "timestamp": datetime.now().isoformat()
+        })
+        
+    except Exception as e:
+        return handle_error(f"Test error: {str(e)}")
+
+# ============================================================================
 # DOCUMENT PROCESSING ENDPOINTS
 # ============================================================================
 
@@ -177,6 +204,14 @@ def get_status():
 def upload_files():
     """Upload files for processing with validation"""
     try:
+        if not temp_upload_dir:
+            return handle_error("Upload directory not initialized", 503)
+        
+        # Ensure temp directory still exists
+        if not os.path.exists(temp_upload_dir):
+            os.makedirs(temp_upload_dir, exist_ok=True)
+            logger.info(f"Recreated temp directory: {temp_upload_dir}")
+        
         if 'files' not in request.files:
             return handle_error("No files provided", 400)
         
@@ -208,9 +243,19 @@ def upload_files():
                 file_path = os.path.join(temp_upload_dir, filename)
                 
                 try:
+                    # Double-check directory exists before saving
+                    os.makedirs(os.path.dirname(file_path), exist_ok=True)
                     file.save(file_path)
-                    uploaded_files.append(file_path)
+                    
+                    # Verify file was actually saved
+                    if os.path.exists(file_path):
+                        uploaded_files.append(file_path)
+                        logger.info(f"Successfully saved file: {file_path}")
+                    else:
+                        errors.append(f"File save verification failed: {file.filename}")
+                        
                 except Exception as e:
+                    logger.error(f"Failed to save {file.filename}: {str(e)}")
                     errors.append(f"Failed to save {file.filename}: {str(e)}")
         
         if not uploaded_files and errors:
@@ -232,6 +277,7 @@ def upload_files():
     except RequestEntityTooLarge:
         return handle_error("File too large (max 100MB total)", 413)
     except Exception as e:
+        logger.error(f"Upload error: {str(e)}")
         return handle_error(f"Upload error: {str(e)}")
 
 @app.route('/process', methods=['POST'])
@@ -246,14 +292,28 @@ def process_documents():
             return handle_error(data, 400)
         
         file_paths = data['file_paths']
+        
+        # Fix: Handle None values and filter them out
+        if not file_paths:
+            return handle_error("No file paths provided", 400)
+        
+        # Filter out None/null values and ensure all are strings
+        valid_file_paths = []
+        for fp in file_paths:
+            if fp is not None and isinstance(fp, str) and fp.strip():
+                valid_file_paths.append(fp.strip())
+        
+        if not valid_file_paths:
+            return handle_error("No valid file paths provided", 400)
+        
         store_prefix = data.get('store_prefix')
         
         # Validate file paths exist
-        missing_files = [fp for fp in file_paths if not os.path.exists(fp)]
+        missing_files = [fp for fp in valid_file_paths if not os.path.exists(fp)]
         if missing_files:
             return handle_error(f"Files not found: {missing_files}", 404)
         
-        result = pipeline.process_new_documents_with_categories(file_paths, store_prefix)
+        result = pipeline.process_new_documents_with_categories(valid_file_paths, store_prefix)
         
         return jsonify({
             "success": True,
